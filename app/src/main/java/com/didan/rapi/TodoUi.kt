@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,9 +21,11 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -158,7 +161,10 @@ fun TodoApp(
         }
     }
 
-    Scaffold(containerColor = MaterialTheme.colorScheme.background) { contentPadding ->
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+    ) { contentPadding ->
         Box(Modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -167,42 +173,49 @@ fun TodoApp(
                     bottom = 96.dp,
                 ),
             ) {
-            item {
-                Header(
-                    state = state,
-                    darkMode = darkMode,
-                    onToggleDarkMode = onToggleDarkMode,
-                )
-            }
-            item {
-                QuickAdd(
-                    title = quickTitle,
-                    onTitleChange = { quickTitle = it },
-                    onAdd = {
-                        if (quickTitle.isNotBlank()) {
-                            vm.quickAdd(quickTitle)
-                            quickTitle = ""
-                        }
-                    },
-                    onOpenEditor = { showNewEditor = true },
-                )
-            }
-            item {
-                FilterBar(state.filter, vm::setFilter)
-            }
-            if (state.visibleTasks.isEmpty()) {
-                item { EmptyState(state.filter, onAdd = { showNewEditor = true }) }
-            } else {
-                items(state.visibleTasks, key = { it.task.id }) { item ->
-                    TaskCard(
-                        item = item,
-                        onToggle = { vm.toggleTask(item) },
-                        onToggleSubtask = vm::toggleSubtask,
-                        onEdit = { editorItem = item },
+                item {
+                    Header(
+                        state = state,
+                        darkMode = darkMode,
+                        onToggleDarkMode = onToggleDarkMode,
                     )
                 }
+                item {
+                    QuickAdd(
+                        title = quickTitle,
+                        onTitleChange = { quickTitle = it },
+                        onAdd = {
+                            if (quickTitle.isNotBlank()) {
+                                vm.quickAdd(quickTitle)
+                                quickTitle = ""
+                            }
+                        },
+                        onOpenEditor = { showNewEditor = true },
+                    )
+                }
+                item {
+                    FilterBar(state.filter, vm::setFilter)
+                }
+                if (state.visibleTasks.isEmpty()) {
+                    item { EmptyState(state.filter, onAdd = { showNewEditor = true }) }
+                } else {
+                    items(state.visibleTasks, key = { it.task.id }) { item ->
+                        TaskCard(
+                            item = item,
+                            onToggle = { vm.toggleTask(item) },
+                            onToggleSubtask = vm::toggleSubtask,
+                            onEdit = { editorItem = item },
+                        )
+                    }
+                }
             }
-            }
+            Spacer(
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .windowInsetsTopHeight(WindowInsets.statusBars)
+                    .background(Brush.linearGradient(listOf(Indigo, Purple))),
+            )
             Button(
                 onClick = { showNewEditor = true },
                 modifier = Modifier
@@ -281,12 +294,6 @@ private fun Header(state: TodoUiState, darkMode: Boolean, onToggleDarkMode: () -
                 accent = Color(0xFFFFC0B9),
             )
         }
-        Text(
-            "Offline • data hanya tersimpan di perangkat ini",
-            color = Color.White.copy(alpha = .9f),
-            fontSize = 12.sp,
-            modifier = Modifier.padding(top = 14.dp),
-        )
     }
 }
 
