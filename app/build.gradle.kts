@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.didan.rapi"
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.didan.rapi"
         minSdk = 26
-        targetSdk = 37
+        targetSdk = 36
         versionCode = providers.gradleProperty("versionCode").orNull?.toInt() ?: 1
         versionName = providers.gradleProperty("versionName").orNull ?: "1.0.0"
 
@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    val composeBom = platform("androidx.compose:compose-bom:2026.06.00")
+    val composeBom = platform("androidx.compose:compose-bom:2026.04.01")
     implementation(composeBom)
     androidTestImplementation(composeBom)
 

@@ -17,7 +17,7 @@ Rapi adalah aplikasi pengelola tugas personal yang ringan, sepenuhnya offline, d
 2. Tunggu proses sinkronisasi Gradle selesai.
 3. Jalankan konfigurasi `app` pada emulator atau perangkat Android 8.0+.
 
-Atau dari terminal dengan JDK 17 dan Android SDK 37:
+Atau dari terminal dengan JDK 17 dan Android SDK 36:
 
 ```bash
 gradle test assembleDebug
